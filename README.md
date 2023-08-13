@@ -120,6 +120,6 @@ parsing a file or command-line output.
 Because of the reasons mentioned above,
 I conjecture that using this approach should result in a **25-40%** improvement in
 fully header-units optimized clean build of a mega project.
-While for a clean build of a C++ mega project using modules should be **3-5%** faster.
+While the clean build of a C++ mega project using modules should be **3-5%** faster.
 Compile speed should not deteriorate using this approach in any case.
 I think the compiler and build-system can support both of these simultaneously.
