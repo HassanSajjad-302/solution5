@@ -20,11 +20,10 @@ Then I ran the ```ninja -nv > "ninja-nv.txt"``` in this build-dir.
 This does dry-run build with verbose output and saves it in ```ninja-nv.txt``` file.
 In this output, I replaced all instances of ```-std:c++17``` with ```-std:c++20```.
 And removed all instances of ```/showIncludes ``` to keep the output clean.
-This file is also copied in this repo.
+You can see contents of it in this repo.
 Then I built the project to create all the required directories,
 otherwise the commands outputted in the ```ninja-nv.txt``` would not work.
-Now, I compiled the ```main.cpp``` and copied the generated executable in the build-dir.
-I ran the test exe.
+Now, I compiled the ```main.cpp``` and ran the generated exe in the build-dir.
 You can see the sample output in ```llvm-output.txt```.
 The executable reads the ```ninja-nv.txt``` file,
 and weeds out all other commands except the compiler-commands.
@@ -43,7 +42,7 @@ As we are compiling files the old-way.
 2) I compiled SFML with C++20 header-units https://github.com/HassanSajjad-302/SFML.
 I used this to measure the % of scanning time in total compilation time in
 a project using C++20 header-units.
-I compiled the ```main2.cpp``` and placed the generated exe in build-dir/drop-in.
+I compiled the ```main2.cpp``` and ran the generated exe in build-dir/drop-in.
 The executable reads ```.response``` and ```.smrules.response``` from all subdirectories.
 It erases ```/showIncludes``` from these files to keep output clean.
 It then first scans and then builds using these response files.
@@ -57,7 +56,7 @@ For few files scanning takes more time than compilation.
 3) What will be the average time of scanning a file in a project size of LLVM. 
 To measure this, I little modified the ```main.cpp``` to ```main3.cpp```.
 It just scans, but does not compile.
-Build the executable and place it in the build-dir.
+Run the executable in the build-dir.
 This scans 2000/2854 files.
 Average time of scanning is **217.9ms**. 
 For few files, it is more than **400ms**.
@@ -71,7 +70,7 @@ And the compiler interacts with the build-system when it has to read a file
 from the disk.
 The build-system can cache the file,
 so that it is not read twice from the disk.
-This is specifically helpful in case of modules / header-files
+This is specifically helpful in case of modules / header-files.
 
 Consider a following structure.
 
@@ -97,7 +96,8 @@ In modules / header-units build however 8 processes are launched with 22 file re
 3 for c.hpp, 4 for c.cpp, 3 for d.hpp, 4 for d.cpp
 
 I measured the number of includes per file in LLVM project.
-To reproduce, Compile ```main4.cpp``` and place the exe in the build-dir
+To reproduce, Compile ```main4.cpp``` and run the exe in the build-dir.
+You can find the sample output in ```includes-output.txt```.
 On average, LLVM source-file includes **400** header-files.
 And there are total of 3598 unique header-files.
 If this project is built with C++20 drop-in header-unit replacement,
@@ -107,8 +107,8 @@ If ```two phase``` model is to be supported as well,
 then the amount of processes becomes 2854 + (2 * 3598).
 Discussed here https://gitlab.kitware.com/cmake/cmake/-/issues/18355#note_1329192.
 
-I think avoiding this should result in 1-2% of compilation speed-up in clean build
-in project size of LLVM.
+I think avoiding these costs of process setup and file reads should result in 1-2% of
+compilation speed-up in clean build in project size of LLVM.
 
 Other very small improvements:
 i) Rebuild is faster as there is no smrules file needed to be checked for an update.
